@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/mickaelpham/znt/auth"
+	"github.com/mickaelpham/znt/diff"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,6 @@ var verifyCmd = &cobra.Command{
 Query all notification definitions for the given Zuora
 environment, and verify they match the template.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		token := auth.NewToken()
-		fmt.Println(token)
+		fmt.Println(diff.FetchTriggers())
 	},
 }

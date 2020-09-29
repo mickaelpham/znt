@@ -1,6 +1,8 @@
 package diff
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -9,7 +11,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-func fetchTriggers() ([]Trigger, error) {
+type triggersResponse struct {
+	Data []Trigger
+	Next string
+}
+
+// FetchTriggers retrive all triggers from Zuora
+func FetchTriggers() ([]Trigger, error) {
 	token := auth.NewToken()
 
 	req, err := http.NewRequest("GET", viper.GetString("baseurl")+"/events/event-triggers", nil)
@@ -33,6 +41,13 @@ func fetchTriggers() ([]Trigger, error) {
 		log.Fatal(string(body))
 	}
 
-	// dec := json.NewDecoder(response.Body)
-	return nil, nil
+	dec := json.NewDecoder(response.Body)
+	var body triggersResponse
+
+	if err = dec.Decode(&body); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(body)
+	return body.Data, nil
 }
