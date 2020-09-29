@@ -1,0 +1,22 @@
+{
+  "callout": {
+
+  },
+  "profiles": [
+    "Profile A",
+    "Profile B"
+  ],
+  "notifications":
+    [
+      {
+        "baseObject": "Account",
+        "triggers": {
+          "insert": "changeType == 'INSERT'",
+          "update": "changeType == 'UPDATE'"
+        },
+        "calloutParams": {
+          "AccountName": "<Account.Name>"
+        }
+      }
+    ]
+}
