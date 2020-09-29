@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 // Token is an OAuth token from Zuora with an expiration time
@@ -21,13 +23,13 @@ type createTokenResponse struct {
 }
 
 // NewToken generates a new token from Zuora
-func NewToken(baseURL, clientID, clientSecret string) Token {
+func NewToken() Token {
 	form := url.Values{}
-	form.Set("client_id", clientID)
-	form.Set("client_secret", clientSecret)
+	form.Set("client_id", viper.GetString("client"))
+	form.Set("client_secret", viper.GetString("secret"))
 	form.Set("grant_type", "client_credentials")
 
-	response, err := http.PostForm(baseURL+"/oauth/token", form)
+	response, err := http.PostForm(viper.GetString("baseurl")+"/oauth/token", form)
 	if err != nil {
 		log.Fatal(err)
 	}
