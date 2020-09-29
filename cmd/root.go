@@ -23,19 +23,25 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	// used for flags
+	cfgFile      string
+	clientID     string
+	clientSecret string
+	baseURL      string
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "znt",
-	Short: "Zuora Notifications Terraform (ZNT)",
-	Long: `
+	// rootCmd represents the base command when called without any subcommands
+	rootCmd = &cobra.Command{
+		Use:   "znt",
+		Short: "Zuora Notifications Terraform (ZNT)",
+		Long: `
 Zuora Notifications Terraform (ZNT)
 
 A manager for Zuora notification definitions
 built in Go. Complete documentation is available at
 https://github.com/mickaelpham/znt`,
-}
+	}
+)
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -49,7 +55,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.znt.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.znt.yaml)")
 
 	rootCmd.AddCommand(verifyCmd)
 }
