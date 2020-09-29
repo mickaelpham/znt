@@ -32,24 +32,24 @@ func TestTriggers(t *testing.T) {
 			"znt-Account-onUpdate",
 		}
 
-		want := []trigger{
+		want := []Trigger{
 			{
-				active:      true,
-				baseObject:  "Account",
-				condition:   "changeType == 'INSERT'",
-				description: "trigger managed by znt",
-				eventType: eventType{
+				Active:      true,
+				BaseObject:  "Account",
+				Condition:   "changeType == 'INSERT'",
+				Description: "trigger managed by znt",
+				EventType: eventType{
 					description: "event managed by znt",
 					displayName: names[0],
 					name:        names[0],
 				},
 			},
 			{
-				active:      true,
-				baseObject:  "Account",
-				condition:   "changeType == 'UPDATE'",
-				description: "trigger managed by znt",
-				eventType: eventType{
+				Active:      true,
+				BaseObject:  "Account",
+				Condition:   "changeType == 'UPDATE'",
+				Description: "trigger managed by znt",
+				EventType: eventType{
 					description: "event managed by znt",
 					displayName: names[1],
 					name:        names[1],
@@ -97,46 +97,46 @@ func TestTriggers(t *testing.T) {
 			"znt-Subscription-onUpdate",
 		}
 
-		want := []trigger{
+		want := []Trigger{
 			{
-				active:      true,
-				baseObject:  "Account",
-				condition:   "changeType == 'INSERT'",
-				description: "trigger managed by znt",
-				eventType: eventType{
+				Active:      true,
+				BaseObject:  "Account",
+				Condition:   "changeType == 'INSERT'",
+				Description: "trigger managed by znt",
+				EventType: eventType{
 					description: "event managed by znt",
 					displayName: names[0],
 					name:        names[0],
 				},
 			},
 			{
-				active:      true,
-				baseObject:  "Account",
-				condition:   "changeType == 'UPDATE'",
-				description: "trigger managed by znt",
-				eventType: eventType{
+				Active:      true,
+				BaseObject:  "Account",
+				Condition:   "changeType == 'UPDATE'",
+				Description: "trigger managed by znt",
+				EventType: eventType{
 					description: "event managed by znt",
 					displayName: names[1],
 					name:        names[1],
 				},
 			},
 			{
-				active:      true,
-				baseObject:  "Subscription",
-				condition:   "changeType == 'INSERT'",
-				description: "trigger managed by znt",
-				eventType: eventType{
+				Active:      true,
+				BaseObject:  "Subscription",
+				Condition:   "changeType == 'INSERT'",
+				Description: "trigger managed by znt",
+				EventType: eventType{
 					description: "event managed by znt",
 					displayName: names[2],
 					name:        names[2],
 				},
 			},
 			{
-				active:      true,
-				baseObject:  "Subscription",
-				condition:   "changeType == 'UPDATE'",
-				description: "trigger managed by znt",
-				eventType: eventType{
+				Active:      true,
+				BaseObject:  "Subscription",
+				Condition:   "changeType == 'UPDATE'",
+				Description: "trigger managed by znt",
+				EventType: eventType{
 					description: "event managed by znt",
 					displayName: names[3],
 					name:        names[3],

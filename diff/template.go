@@ -5,6 +5,7 @@ import (
 	"io"
 )
 
+// Template represents the intended state
 type Template struct {
 	Callout struct {
 		CalloutAuth struct {
@@ -25,6 +26,7 @@ type Template struct {
 	}
 }
 
+// Parse the input template file
 func Parse(r io.Reader) (*Template, error) {
 	dec := json.NewDecoder(r)
 
