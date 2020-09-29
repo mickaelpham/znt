@@ -1,6 +1,12 @@
 {
   "callout": {
-
+    "calloutAuth": {
+      "domain": "",
+      "password": "",
+      "preemptive": true,
+      "username": ""
+    },
+    "calloutBaseurl": ""
   },
   "profiles": [
     "Profile A",
