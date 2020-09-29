@@ -25,10 +25,8 @@ import (
 
 var (
 	// used for flags
-	cfgFile      string
-	clientID     string
-	clientSecret string
-	baseURL      string
+	cfgFile string
+	tplFile string
 
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd = &cobra.Command{
@@ -56,6 +54,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.znt.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&tplFile, "template", "t", "", "template file")
 
 	rootCmd.AddCommand(verifyCmd)
 }
