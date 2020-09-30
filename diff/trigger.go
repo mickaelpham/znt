@@ -51,3 +51,7 @@ func (t *Template) triggers() []Trigger {
 
 	return result
 }
+
+// func Cover(template, remote []Trigger) bool {
+// 	retun true
+// }

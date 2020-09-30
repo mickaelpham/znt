@@ -14,6 +14,7 @@ var verifyCmd = &cobra.Command{
 Query all notification definitions for the given Zuora
 environment, and verify they match the template.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(diff.FetchTriggers())
+		triggers := diff.FetchTriggers()
+		fmt.Printf("Found %d event triggers\n", len(triggers))
 	},
 }
