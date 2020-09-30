@@ -38,10 +38,10 @@ func TestTriggers(t *testing.T) {
 				BaseObject:  "Account",
 				Condition:   "changeType == 'INSERT'",
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: names[0],
-					name:        names[0],
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: names[0],
+					Name:        names[0],
 				},
 			},
 			{
@@ -49,10 +49,10 @@ func TestTriggers(t *testing.T) {
 				BaseObject:  "Account",
 				Condition:   "changeType == 'UPDATE'",
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: names[1],
-					name:        names[1],
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: names[1],
+					Name:        names[1],
 				},
 			},
 		}
@@ -103,10 +103,10 @@ func TestTriggers(t *testing.T) {
 				BaseObject:  "Account",
 				Condition:   "changeType == 'INSERT'",
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: names[0],
-					name:        names[0],
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: names[0],
+					Name:        names[0],
 				},
 			},
 			{
@@ -114,10 +114,10 @@ func TestTriggers(t *testing.T) {
 				BaseObject:  "Account",
 				Condition:   "changeType == 'UPDATE'",
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: names[1],
-					name:        names[1],
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: names[1],
+					Name:        names[1],
 				},
 			},
 			{
@@ -125,10 +125,10 @@ func TestTriggers(t *testing.T) {
 				BaseObject:  "Subscription",
 				Condition:   "changeType == 'INSERT'",
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: names[2],
-					name:        names[2],
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: names[2],
+					Name:        names[2],
 				},
 			},
 			{
@@ -136,10 +136,10 @@ func TestTriggers(t *testing.T) {
 				BaseObject:  "Subscription",
 				Condition:   "changeType == 'UPDATE'",
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: names[3],
-					name:        names[3],
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: names[3],
+					Name:        names[3],
 				},
 			},
 		}

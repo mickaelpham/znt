@@ -5,10 +5,11 @@ import (
 	"strings"
 )
 
-type eventType struct {
-	description string
-	displayName string
-	name        string
+// EventType fired when the trigger conditions are met
+type EventType struct {
+	Description string
+	DisplayName string
+	Name        string
 }
 
 // Trigger fired when the condition is met
@@ -17,7 +18,7 @@ type Trigger struct {
 	BaseObject  string
 	Condition   string
 	Description string
-	EventType   eventType
+	EventType   EventType
 }
 
 func (t *Template) triggers() []Trigger {
@@ -32,10 +33,10 @@ func (t *Template) triggers() []Trigger {
 				BaseObject:  n.BaseObject,
 				Condition:   condition,
 				Description: "trigger managed by znt",
-				EventType: eventType{
-					description: "event managed by znt",
-					displayName: name,
-					name:        name,
+				EventType: EventType{
+					Description: "event managed by znt",
+					DisplayName: name,
+					Name:        name,
 				},
 			})
 		}
@@ -45,7 +46,7 @@ func (t *Template) triggers() []Trigger {
 	// of short name / condition (map are not guaranteed order when
 	// parsing JSON)
 	sort.Slice(result, func(i, j int) bool {
-		return result[i].EventType.name < result[j].EventType.name
+		return result[i].EventType.Name < result[j].EventType.Name
 	})
 
 	return result
