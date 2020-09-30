@@ -200,6 +200,7 @@ func TestDiff(t *testing.T) {
 				Condition:  "changeType == 'INSERT'",
 			},
 			{
+				Active:     true,
 				BaseObject: "Subscription",
 				Condition:  "changeType == 'UPDATE'",
 			},
@@ -207,6 +208,31 @@ func TestDiff(t *testing.T) {
 
 		want := TriggerDiff{
 			Remove: []Trigger{remote[0]},
+		}
+
+		got := NewDiff(template, remote)
+
+		assertEqual(got, want, t)
+	})
+
+	t.Run("remote is different than template", func(t *testing.T) {
+		template := []Trigger{
+			{
+				BaseObject: "Subscription",
+				Condition:  "changeType == 'INSERT'",
+			},
+		}
+
+		remote := []Trigger{
+			{
+				BaseObject: "Subscription",
+				Condition:  "changeType == 'UPDATE'",
+			},
+		}
+
+		want := TriggerDiff{
+			Add:    template,
+			Remove: remote,
 		}
 
 		got := NewDiff(template, remote)

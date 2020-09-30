@@ -70,6 +70,12 @@ func (t Trigger) Equals(another Trigger) bool {
 	return t.BaseObject == another.BaseObject && t.Condition == another.Condition
 }
 
+// LessThan compares two trigger instances based on their base object, further filtered by their condition
+func (t Trigger) LessThan(another Trigger) bool {
+	return t.BaseObject < another.BaseObject || t.BaseObject == another.BaseObject && t.Condition < another.Condition
+}
+
+// Stringer interface
 func (t Trigger) String() string {
 	return fmt.Sprintf("{%s on %q}", t.BaseObject, t.Condition)
 }
@@ -78,19 +84,44 @@ func (t Trigger) String() string {
 func NewDiff(template, remote []Trigger) TriggerDiff {
 	result := TriggerDiff{}
 
-	// guard clause
-	if len(remote) == 0 {
-		result.Add = template
-		return result
-	}
-
+	i := 0
 	j := 0
-	for i := range template {
-		for !template[i].Equals(remote[j]) {
-			result.Remove = append(result.Remove, remote[i])
+
+	for i < len(template) && j < len(remote) {
+		if template[i].Equals(remote[j]) {
+			result.Update = append(result.Update, remote[j])
+			i++
+			j++
+		} else if template[i].LessThan(remote[j]) {
+			result.Add = append(result.Add, template[i])
+			i++
+		} else {
+			result.Remove = append(result.Remove, remote[j])
 			j++
 		}
 	}
+
+	// remaining elements of a need to be added
+	for i < len(template) {
+		result.Add = append(result.Add, template[i])
+		i++
+	}
+
+	// remaining elements of remote need to be removed
+	for j < len(remote) {
+		result.Remove = append(result.Remove, remote[j])
+		j++
+	}
+
+	// filter out the elements in update which are already active
+	tmp := make([]Trigger, 0)
+	for _, needUpdate := range result.Update {
+		if !needUpdate.Active {
+			tmp = append(tmp, needUpdate)
+		}
+
+	}
+	result.Update = tmp
 
 	return result
 }
