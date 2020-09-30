@@ -1,6 +1,7 @@
 package diff
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -21,6 +22,18 @@ type Trigger struct {
 	EventType   EventType
 }
 
+// TriggerDiff contains the differences between the template and the remote environment
+type TriggerDiff struct {
+	Add    []Trigger
+	Remove []Trigger
+	Update []Trigger
+}
+
+const (
+	managedTriggerDescription = "trigger managed by znt"
+	managedEventDescription   = "event managed by znt"
+)
+
 func (t *Template) triggers() []Trigger {
 	result := make([]Trigger, 0)
 
@@ -32,9 +45,9 @@ func (t *Template) triggers() []Trigger {
 				Active:      true,
 				BaseObject:  n.BaseObject,
 				Condition:   condition,
-				Description: "trigger managed by znt",
+				Description: managedTriggerDescription,
 				EventType: EventType{
-					Description: "event managed by znt",
+					Description: managedEventDescription,
 					DisplayName: name,
 					Name:        name,
 				},
@@ -52,6 +65,32 @@ func (t *Template) triggers() []Trigger {
 	return result
 }
 
-// func Cover(template, remote []Trigger) bool {
-// 	retun true
-// }
+// Equals verify that two triggers base object and condition matches
+func (t Trigger) Equals(another Trigger) bool {
+	return t.BaseObject == another.BaseObject && t.Condition == another.Condition
+}
+
+func (t Trigger) String() string {
+	return fmt.Sprintf("{%s on %q}", t.BaseObject, t.Condition)
+}
+
+// NewDiff accepts sorted trigger arrays and return the diff
+func NewDiff(template, remote []Trigger) TriggerDiff {
+	result := TriggerDiff{}
+
+	// guard clause
+	if len(remote) == 0 {
+		result.Add = template
+		return result
+	}
+
+	j := 0
+	for i := range template {
+		for !template[i].Equals(remote[j]) {
+			result.Remove = append(result.Remove, remote[i])
+			j++
+		}
+	}
+
+	return result
+}

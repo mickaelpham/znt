@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 
 	"github.com/mickaelpham/znt/auth"
 	"github.com/spf13/viper"
@@ -15,8 +16,7 @@ type triggersResponse struct {
 	Next string
 }
 
-// FetchTriggers retrive all triggers from Zuora
-func FetchTriggers() []Trigger {
+func fetchTriggers() []Trigger {
 	token := auth.NewToken()
 	result := make([]Trigger, 0)
 	queryPaths := []string{"/events/event-triggers"}
@@ -59,6 +59,24 @@ func FetchTriggers() []Trigger {
 		result = append(result, body.Data...)
 		if body.Next != "" {
 			queryPaths = append(queryPaths, body.Next)
+		}
+	}
+
+	// sort the triggers by name
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].EventType.Name < result[j].EventType.Name
+	})
+
+	return result
+}
+
+// FetchManagedTriggers retrieve all managed triggers from Zuora
+func FetchManagedTriggers() []Trigger {
+	result := make([]Trigger, 0)
+
+	for _, rmt := range fetchTriggers() {
+		if rmt.Description == managedTriggerDescription {
+			result = append(result, rmt)
 		}
 	}
 
