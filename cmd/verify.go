@@ -40,5 +40,15 @@ environment, and verify they match the template.`,
 
 		triggerDiff := diff.NewTriggerDiff(tpl.Triggers(), diff.FetchManagedTriggers())
 		fmt.Println(triggerDiff)
+
+		profiles := diff.FetchProfiles()
+		fmt.Println("--- Communication Profiles")
+		for name, ID := range profiles {
+			fmt.Printf("  * (%s) %s\n", ID, name)
+		}
+		fmt.Println()
+
+		notificationDiff := diff.NewNotificationDiff(tpl.NotificationDefinitions(profiles), diff.FetchManagedNotifications())
+		fmt.Println(notificationDiff)
 	},
 }

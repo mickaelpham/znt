@@ -8,7 +8,10 @@
     },
     "calloutBaseurl": ""
   },
-  "profiles": ["Profile A", "Profile B"],
+  "profiles": [
+    "Electronic Payment - Self Service",
+    "Electronic Payment - Pending"
+  ],
   "notifications": [
     {
       "baseObject": "Account",

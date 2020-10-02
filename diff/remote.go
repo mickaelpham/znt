@@ -91,6 +91,18 @@ func FetchManagedTriggers() []Trigger {
 
 // FetchManagedNotifications retrieves all managed notifications from Zuora
 func FetchManagedNotifications() []Notification {
+	result := make([]Notification, 0)
+
+	for _, rmt := range fetchNotifications() {
+		if rmt.Description == managedNotificationDescription {
+			result = append(result, rmt)
+		}
+	}
+
+	return result
+}
+
+func fetchNotifications() []Notification {
 	token := auth.NewToken()
 	result := make([]Notification, 0)
 	queryPaths := []string{"/notifications/notification-definitions"}

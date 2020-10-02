@@ -53,7 +53,7 @@ func TestNotifications(t *testing.T) {
 			t.Error(err)
 		}
 
-		got := tpl.notifications(profiles)
+		got := tpl.NotificationDefinitions(profiles)
 
 		want := []Notification{
 			{
@@ -125,7 +125,7 @@ func TestNotifications(t *testing.T) {
 			t.Error(err)
 		}
 
-		got := tpl.notifications(profiles)
+		got := tpl.NotificationDefinitions(profiles)
 
 		want := []Notification{
 			{
@@ -244,7 +244,7 @@ func TestNotifications(t *testing.T) {
 			t.Error(err)
 		}
 
-		got := tpl.notifications(profiles)
+		got := tpl.NotificationDefinitions(profiles)
 
 		want := []Notification{
 			{

@@ -1,7 +1,9 @@
 package diff
 
 import (
+	"fmt"
 	"log"
+	"strings"
 )
 
 const managedNotificationDescription = "notification managed by znt"
@@ -18,7 +20,8 @@ type Notification struct {
 	Name                   string
 }
 
-func (t *Template) notifications(profileIDByName map[string]string) []Notification {
+// NotificationDefinitions expected from the template
+func (t *Template) NotificationDefinitions(profileIDByName map[string]string) []Notification {
 	result := make([]Notification, 0)
 
 	baseCallout := t.Callout
@@ -125,4 +128,40 @@ func NewNotificationDiff(template, remote []Notification) NotificationDiff {
 	result.Update = tmp
 
 	return result
+}
+
+func (n Notification) String() string {
+	return fmt.Sprintf("(%s) %s", n.CommunicationProfileID, n.EventTypeName)
+}
+
+func (d NotificationDiff) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("\n--- Notification Diff\n\n")
+
+	if len(d.Add) > 0 {
+		sb.WriteString("These notifications will be created: \n")
+		for _, t := range d.Add {
+			sb.WriteString("  * " + t.String() + "\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(d.Remove) > 0 {
+		sb.WriteString("These notifications will be deleted: \n")
+		for _, t := range d.Remove {
+			sb.WriteString("  * " + t.String() + "\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(d.Update) > 0 {
+		sb.WriteString("These notifications will be updated: \n")
+		for _, t := range d.Update {
+			sb.WriteString("  * " + t.String() + " (activated)\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	return sb.String()
 }
