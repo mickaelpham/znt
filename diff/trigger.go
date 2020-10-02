@@ -34,24 +34,29 @@ const (
 	managedEventDescription   = "event managed by znt"
 )
 
+// NewTrigger managed by ZNT
+func NewTrigger(baseObject, triggerName, condition string) Trigger {
+	name := "znt-" + baseObject + "-on" + strings.Title(triggerName)
+
+	return Trigger{
+		Active:      true,
+		BaseObject:  baseObject,
+		Condition:   condition,
+		Description: managedTriggerDescription,
+		EventType: EventType{
+			Description: managedEventDescription,
+			DisplayName: name,
+			Name:        name,
+		},
+	}
+}
+
 func (t *Template) triggers() []Trigger {
 	result := make([]Trigger, 0)
 
 	for _, n := range t.Notifications {
 		for _, t := range n.Triggers {
-			name := "znt-" + n.BaseObject + "-on" + strings.Title(t.Name)
-
-			result = append(result, Trigger{
-				Active:      true,
-				BaseObject:  n.BaseObject,
-				Condition:   t.Condition,
-				Description: managedTriggerDescription,
-				EventType: EventType{
-					Description: managedEventDescription,
-					DisplayName: name,
-					Name:        name,
-				},
-			})
+			result = append(result, NewTrigger(n.BaseObject, t.Name, t.Condition))
 		}
 	}
 

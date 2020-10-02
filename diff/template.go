@@ -7,15 +7,7 @@ import (
 
 // Template represents the intended state
 type Template struct {
-	Callout struct {
-		CalloutAuth struct {
-			Domain     string
-			Password   string
-			Preemptive bool
-			Username   string
-		}
-		CalloutBaseurl string
-	}
+	Callout Callout
 
 	Profiles []string
 

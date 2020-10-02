@@ -155,7 +155,7 @@ type profilesQueryResponse struct {
 }
 
 // FetchProfiles returns all communication profiles in the associated Zuora tenant
-func FetchProfiles() []Profile {
+func FetchProfiles() map[string]string {
 	token := auth.NewToken()
 	query := queryPayload{"SELECT Id, ProfileName FROM CommunicationProfile"}
 	payload, err := json.Marshal(query)
@@ -191,5 +191,10 @@ func FetchProfiles() []Profile {
 		log.Fatalln("there are more communication profile to query")
 	}
 
-	return body.Records
+	result := make(map[string]string)
+	for _, p := range body.Records {
+		result[p.Name] = p.ID
+	}
+
+	return result
 }

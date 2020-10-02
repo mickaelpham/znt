@@ -3,7 +3,7 @@ package diff
 // Callout sent by Zuora
 type Callout struct {
 	Active         bool
-	CalloutAuth    map[string]string
+	CalloutAuth    CalloutAuth
 	CalloutBaseURL string
 	CalloutParams  map[string]string
 	CalloutRetry   bool
@@ -13,4 +13,12 @@ type Callout struct {
 	ID             string
 	Name           string
 	RequiredAuth   bool
+}
+
+// CalloutAuth sent by Zuora
+type CalloutAuth struct {
+	Domain     string
+	Password   string
+	Preemptive bool
+	Username   string
 }
