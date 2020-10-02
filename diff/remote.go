@@ -1,6 +1,7 @@
 package diff
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -141,4 +142,54 @@ func FetchManagedNotifications() []Notification {
 	// })
 
 	return result
+}
+
+type queryPayload struct {
+	QueryString string `json:"queryString"`
+}
+
+type profilesQueryResponse struct {
+	Records []Profile
+	Done    bool
+	Size    int
+}
+
+// FetchProfiles returns all communication profiles in the associated Zuora tenant
+func FetchProfiles() []Profile {
+	token := auth.NewToken()
+	query := queryPayload{"SELECT Id, ProfileName FROM CommunicationProfile"}
+	payload, err := json.Marshal(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req, err := http.NewRequest("POST", viper.GetString("baseurl")+"/v1/action/query", bytes.NewBuffer(payload))
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer "+token.Val)
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Fatal(string(body))
+	}
+
+	dec := json.NewDecoder(response.Body)
+	var body profilesQueryResponse
+	if err = dec.Decode(&body); err != nil {
+		log.Fatal(err)
+	}
+
+	if !body.Done {
+		log.Fatalln("there are more communication profile to query")
+	}
+
+	return body.Records
 }

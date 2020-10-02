@@ -17,8 +17,12 @@ environment, and verify they match the template.`,
 		// triggers := diff.FetchManagedTriggers()
 		// fmt.Printf("Found %d event triggers\n", len(triggers))
 
-		notifications := diff.FetchManagedNotifications()
-		fmt.Printf("Found %d notification\n", len(notifications))
-		fmt.Println(notifications)
+		// notifications := diff.FetchManagedNotifications()
+		// fmt.Printf("Found %d notification\n", len(notifications))
+		// fmt.Println(notifications)
+
+		profiles := diff.FetchProfiles()
+		fmt.Printf("Found %d communication profiles\n", len(profiles))
+		fmt.Println(profiles)
 	},
 }

@@ -11,3 +11,13 @@ type Notification struct {
 	ID                     string
 	Name                   string
 }
+
+func (t *Template) notifications() []Notification {
+	result := make([]Notification, 0)
+
+	return result
+}
+
+func (t *Template) callout() Callout {
+	return Callout{}
+}
