@@ -14,10 +14,16 @@ func TestTriggers(t *testing.T) {
   "notifications": [
     {
       "baseObject": "Account",
-      "triggers": {
-        "insert": "changeType == 'INSERT'",
-        "update": "changeType == 'UPDATE'"
-      }
+      "triggers": [
+        {
+          "name": "insert",
+          "condition": "changeType == 'INSERT'"
+        },
+        {
+          "name": "update",
+          "condition": "changeType == 'UPDATE'"
+        }
+      ]
     }
   ]
 }
@@ -71,20 +77,33 @@ func TestTriggers(t *testing.T) {
   "notifications": [
     {
       "baseObject": "Account",
-      "triggers": {
-        "insert": "changeType == 'INSERT'",
-        "update": "changeType == 'UPDATE'"
-      }
+      "triggers": [
+        {
+          "name": "insert",
+          "condition": "changeType == 'INSERT'"
+        },
+        {
+          "name": "update",
+          "condition": "changeType == 'UPDATE'"
+        }
+      ]
     },
     {
       "baseObject": "Subscription",
-      "triggers": {
-        "insert": "changeType == 'INSERT'",
-        "update": "changeType == 'UPDATE'"
-      }
+      "triggers": [
+        {
+          "name": "insert",
+          "condition": "changeType == 'INSERT'"
+        },
+        {
+          "name": "update",
+          "condition": "changeType == 'UPDATE'"
+        }
+      ]
     }
   ]
 }
+
 `))
 		if err != nil {
 			t.Error(err)

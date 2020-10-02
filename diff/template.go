@@ -20,8 +20,11 @@ type Template struct {
 	Profiles []string
 
 	Notifications []struct {
-		BaseObject    string
-		Triggers      map[string]string
+		BaseObject string
+		Triggers   []struct {
+			Name      string
+			Condition string
+		}
 		CalloutParams map[string]string
 	}
 }

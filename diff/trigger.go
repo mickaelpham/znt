@@ -38,13 +38,13 @@ func (t *Template) triggers() []Trigger {
 	result := make([]Trigger, 0)
 
 	for _, n := range t.Notifications {
-		for op, condition := range n.Triggers {
-			name := "znt-" + n.BaseObject + "-on" + strings.Title(op)
+		for _, t := range n.Triggers {
+			name := "znt-" + n.BaseObject + "-on" + strings.Title(t.Name)
 
 			result = append(result, Trigger{
 				Active:      true,
 				BaseObject:  n.BaseObject,
-				Condition:   condition,
+				Condition:   t.Condition,
 				Description: managedTriggerDescription,
 				EventType: EventType{
 					Description: managedEventDescription,
@@ -55,9 +55,7 @@ func (t *Template) triggers() []Trigger {
 		}
 	}
 
-	// sort the triggers by name, since the template layout use a map
-	// of short name / condition (map are not guaranteed order when
-	// parsing JSON)
+	// sort the triggers by event type name
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].EventType.Name < result[j].EventType.Name
 	})

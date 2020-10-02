@@ -12,10 +12,16 @@
   "notifications": [
     {
       "baseObject": "Account",
-      "triggers": {
-        "insert": "changeType == 'INSERT'",
-        "update": "changeType == 'UPDATE'"
-      },
+      "triggers": [
+        {
+          "name": "insert",
+          "condition": "changeType == 'INSERT'"
+        },
+        {
+          "name": "update",
+          "condition": "changeType == 'UPDATE'"
+        }
+      ],
       "calloutParams": {
         "AccountName": "<Account.Name>"
       }
