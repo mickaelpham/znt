@@ -171,7 +171,7 @@ func TestTriggers(t *testing.T) {
 	})
 }
 
-func TestDiff(t *testing.T) {
+func TestTriggerDiff(t *testing.T) {
 	assertEqual := func(got, want TriggerDiff, t *testing.T) {
 		t.Helper()
 
@@ -200,7 +200,7 @@ func TestDiff(t *testing.T) {
 			Add: []Trigger{template[0]},
 		}
 
-		got := NewDiff(template, []Trigger{})
+		got := NewTriggerDiff(template, []Trigger{})
 
 		assertEqual(got, want, t)
 	})
@@ -229,7 +229,7 @@ func TestDiff(t *testing.T) {
 			Remove: []Trigger{remote[0]},
 		}
 
-		got := NewDiff(template, remote)
+		got := NewTriggerDiff(template, remote)
 
 		assertEqual(got, want, t)
 	})
@@ -254,7 +254,7 @@ func TestDiff(t *testing.T) {
 			Remove: remote,
 		}
 
-		got := NewDiff(template, remote)
+		got := NewTriggerDiff(template, remote)
 
 		assertEqual(got, want, t)
 	})

@@ -475,3 +475,67 @@ func TestNotifications(t *testing.T) {
 		}
 	})
 }
+
+func TestNotificationDiff(t *testing.T) {
+	assertEqual := func(got, want NotificationDiff, t *testing.T) {
+		t.Helper()
+
+		if len(got.Add) != len(want.Add) {
+			t.Errorf("Add: got %v want %v", got.Add, want.Add)
+		}
+
+		if len(got.Remove) != len(want.Remove) {
+			t.Errorf("Remove: got %v want %v", got.Remove, want.Remove)
+		}
+
+		if len(got.Update) != len(want.Update) {
+			t.Errorf("Update: got %v want %v", got.Update, want.Update)
+		}
+	}
+
+	t.Run("remote is empty", func(t *testing.T) {
+		template := []Notification{
+			{
+				CommunicationProfileID: "profile-id-123",
+				EventTypeName:          "znt-Account-onUpdate",
+			},
+		}
+
+		want := NotificationDiff{
+			Add: []Notification{template[0]},
+		}
+
+		got := NewNotificationDiff(template, []Notification{})
+
+		assertEqual(got, want, t)
+	})
+
+	t.Run("remote is greater than template", func(t *testing.T) {
+		template := []Notification{
+			{
+				CommunicationProfileID: "profile-id-123",
+				EventTypeName:          "znt-Account-onUpdate",
+			},
+		}
+
+		remote := []Notification{
+			{
+				Active:                 true,
+				CommunicationProfileID: "profile-id-123",
+				EventTypeName:          "znt-Account-onUpdate",
+			},
+			{
+				CommunicationProfileID: "profile-id-234",
+				EventTypeName:          "znt-Account-onUpdate",
+			},
+		}
+
+		want := NotificationDiff{
+			Remove: []Notification{remote[1]},
+		}
+
+		got := NewNotificationDiff(template, remote)
+
+		assertEqual(got, want, t)
+	})
+}

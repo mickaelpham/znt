@@ -83,8 +83,8 @@ func (t Trigger) String() string {
 	return fmt.Sprintf("{%s on %q}", t.BaseObject, t.Condition)
 }
 
-// NewDiff accepts sorted trigger arrays and return the diff
-func NewDiff(template, remote []Trigger) TriggerDiff {
+// NewTriggerDiff accepts sorted trigger arrays and return the diff
+func NewTriggerDiff(template, remote []Trigger) TriggerDiff {
 	result := TriggerDiff{}
 
 	i := 0

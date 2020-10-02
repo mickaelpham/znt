@@ -63,3 +63,66 @@ func (t *Template) notifications(profileIDByName map[string]string) []Notificati
 
 	return result
 }
+
+// Equals verify that two notification have the same com. profile ID and event type name
+func (n Notification) Equals(another Notification) bool {
+	return n.CommunicationProfileID == another.CommunicationProfileID && n.EventTypeName == another.EventTypeName
+}
+
+// LessThan compares two notifications based on their com. profile ID, further filtered by their event type name
+func (n Notification) LessThan(another Notification) bool {
+	return n.CommunicationProfileID < another.CommunicationProfileID || n.CommunicationProfileID == another.CommunicationProfileID && n.EventTypeName < another.EventTypeName
+}
+
+// NotificationDiff contains the differences between the template and the remote environment
+type NotificationDiff struct {
+	Add    []Notification
+	Remove []Notification
+	Update []Notification
+}
+
+// NewNotificationDiff accepts sorted trigger arrays and return the diff
+func NewNotificationDiff(template, remote []Notification) NotificationDiff {
+	result := NotificationDiff{}
+
+	i := 0
+	j := 0
+
+	for i < len(template) && j < len(remote) {
+		if template[i].Equals(remote[j]) {
+			result.Update = append(result.Update, remote[j])
+			i++
+			j++
+		} else if template[i].LessThan(remote[j]) {
+			result.Add = append(result.Add, template[i])
+			i++
+		} else {
+			result.Remove = append(result.Remove, remote[j])
+			j++
+		}
+	}
+
+	// remaining elements of a need to be added
+	for i < len(template) {
+		result.Add = append(result.Add, template[i])
+		i++
+	}
+
+	// remaining elements of remote need to be removed
+	for j < len(remote) {
+		result.Remove = append(result.Remove, remote[j])
+		j++
+	}
+
+	// TODO filter out the elements in update which already match with the template
+	tmp := make([]Notification, 0)
+	for _, needUpdate := range result.Update {
+		if !needUpdate.Active {
+			tmp = append(tmp, needUpdate)
+		}
+
+	}
+	result.Update = tmp
+
+	return result
+}
