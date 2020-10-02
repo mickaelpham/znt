@@ -9,8 +9,8 @@
     "calloutBaseurl": ""
   },
   "profiles": [
-    "Electronic Payment - Self Service",
-    "Electronic Payment - Pending"
+    "Profile A",
+    "Profile B"
   ],
   "notifications": [
     {
