@@ -1,9 +1,17 @@
 package diff
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"sort"
 	"strings"
+
+	"github.com/mickaelpham/znt/auth"
+	"github.com/spf13/viper"
 )
 
 // EventType fired when the trigger conditions are met
@@ -15,18 +23,12 @@ type EventType struct {
 
 // Trigger fired when the condition is met
 type Trigger struct {
+	ID          string
 	Active      bool
 	BaseObject  string
 	Condition   string
 	Description string
 	EventType   EventType
-}
-
-// TriggerDiff contains the differences between the template and the remote environment
-type TriggerDiff struct {
-	Add    []Trigger
-	Remove []Trigger
-	Update []Trigger
 }
 
 const (
@@ -84,80 +86,63 @@ func (t Trigger) String() string {
 	return fmt.Sprintf("{%s on %q}", t.BaseObject, t.Condition)
 }
 
-// NewTriggerDiff accepts sorted trigger arrays and return the diff
-func NewTriggerDiff(template, remote []Trigger) TriggerDiff {
-	result := TriggerDiff{}
+// Insert the trigger in the target Zuora environment
+func (t Trigger) Insert() error {
+	token := auth.NewToken()
+	payload, err := json.Marshal(t)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	i := 0
-	j := 0
+	req, err := http.NewRequest("POST", viper.GetString("baseurl")+"/events/event-triggers", bytes.NewBuffer(payload))
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	for i < len(template) && j < len(remote) {
-		if template[i].Equals(remote[j]) {
-			result.Update = append(result.Update, remote[j])
-			i++
-			j++
-		} else if template[i].LessThan(remote[j]) {
-			result.Add = append(result.Add, template[i])
-			i++
-		} else {
-			result.Remove = append(result.Remove, remote[j])
-			j++
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer "+token.Val)
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != 201 {
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Fatal(err)
 		}
+		log.Fatal(string(body))
 	}
 
-	// remaining elements of a need to be added
-	for i < len(template) {
-		result.Add = append(result.Add, template[i])
-		i++
-	}
-
-	// remaining elements of remote need to be removed
-	for j < len(remote) {
-		result.Remove = append(result.Remove, remote[j])
-		j++
-	}
-
-	// filter out the elements in update which are already active
-	tmp := make([]Trigger, 0)
-	for _, needUpdate := range result.Update {
-		if !needUpdate.Active {
-			tmp = append(tmp, needUpdate)
-		}
-
-	}
-	result.Update = tmp
-
-	return result
+	return nil
 }
 
-func (d TriggerDiff) String() string {
-	var sb strings.Builder
-
-	sb.WriteString("\n--- Trigger Diff\n\n")
-
-	if len(d.Add) > 0 {
-		sb.WriteString("These triggers will be created: \n")
-		for _, t := range d.Add {
-			sb.WriteString("  * " + t.String() + "\n")
-		}
-		sb.WriteString("\n")
+// Destroy the trigger in the targeted Zuora environment
+func (t Trigger) Destroy() error {
+	if t.ID == "" {
+		log.Fatalf("trigger %s doesn't have an ID", t)
 	}
 
-	if len(d.Remove) > 0 {
-		sb.WriteString("These triggers will be deleted: \n")
-		for _, t := range d.Remove {
-			sb.WriteString("  * " + t.String() + "\n")
-		}
-		sb.WriteString("\n")
+	token := auth.NewToken()
+	req, err := http.NewRequest("DELETE", viper.GetString("baseurl")+"/events/event-triggers/"+t.ID, nil)
+	if err != nil {
+		log.Fatal(err)
 	}
+	req.Header.Add("Authorization", "Bearer "+token.Val)
 
-	if len(d.Update) > 0 {
-		sb.WriteString("These triggers will be updated: \n")
-		for _, t := range d.Update {
-			sb.WriteString("  * " + t.String() + " (activated)\n")
-		}
-		sb.WriteString("\n")
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
 	}
+	defer response.Body.Close()
 
-	return sb.String()
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(string(body))
+
+	return nil
 }

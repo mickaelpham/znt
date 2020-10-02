@@ -58,6 +58,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&tplFile, "template", "t", "", "template file")
 
 	rootCmd.AddCommand(verifyCmd)
+	rootCmd.AddCommand(applyCmd)
 }
 
 // initConfig reads in config file and ENV variables if set.
