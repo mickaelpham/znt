@@ -70,5 +70,5 @@ These notifications will be created:
       triggers managed by this tool
 - [x] Similarly, prefix all notification definition name by `znt-` and construct
       the name like: `znt-on<Object><ConditionKey>`
-- Add an `apply` and a `destroy` command (self-explanatory)
-- Update the notification instead of destroying/adding them back
+- [ ] Add an `apply` and a `destroy` command (self-explanatory)
+- [ ] Update the notification instead of destroying/adding them back
