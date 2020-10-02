@@ -51,7 +51,8 @@ func NewTrigger(baseObject, triggerName, condition string) Trigger {
 	}
 }
 
-func (t *Template) triggers() []Trigger {
+// Triggers expected from the template
+func (t *Template) Triggers() []Trigger {
 	result := make([]Trigger, 0)
 
 	for _, n := range t.Notifications {
@@ -127,4 +128,36 @@ func NewTriggerDiff(template, remote []Trigger) TriggerDiff {
 	result.Update = tmp
 
 	return result
+}
+
+func (d TriggerDiff) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("\n--- Trigger Diff\n\n")
+
+	if len(d.Add) > 0 {
+		sb.WriteString("These triggers will be created: \n")
+		for _, t := range d.Add {
+			sb.WriteString("  * " + t.String() + "\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(d.Remove) > 0 {
+		sb.WriteString("These triggers will be deleted: \n")
+		for _, t := range d.Remove {
+			sb.WriteString("  * " + t.String() + "\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(d.Update) > 0 {
+		sb.WriteString("These triggers will be updated: \n")
+		for _, t := range d.Update {
+			sb.WriteString("  * " + t.String() + " (activated)\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	return sb.String()
 }

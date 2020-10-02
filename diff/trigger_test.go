@@ -63,7 +63,7 @@ func TestTriggers(t *testing.T) {
 			},
 		}
 
-		got := template.triggers()
+		got := template.Triggers()
 
 		if !reflect.DeepEqual(want, got) {
 			t.Errorf("got %v want %v given %v", got, want, template)
@@ -163,7 +163,7 @@ func TestTriggers(t *testing.T) {
 			},
 		}
 
-		got := template.triggers()
+		got := template.Triggers()
 
 		if !reflect.DeepEqual(want, got) {
 			t.Errorf("got %v want %v given %v", got, want, template)

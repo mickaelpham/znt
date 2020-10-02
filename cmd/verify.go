@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/mickaelpham/znt/diff"
 	"github.com/spf13/cobra"
@@ -21,8 +24,21 @@ environment, and verify they match the template.`,
 		// fmt.Printf("Found %d notification\n", len(notifications))
 		// fmt.Println(notifications)
 
-		profiles := diff.FetchProfiles()
-		fmt.Printf("Found %d communication profiles\n", len(profiles))
-		fmt.Println(profiles)
+		// profiles := diff.FetchProfiles()
+		// fmt.Printf("Found %d communication profiles\n", len(profiles))
+		// fmt.Println(profiles)
+
+		f, err := os.Open(tplFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		tpl, err := diff.Parse(bufio.NewReader(f))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		triggerDiff := diff.NewTriggerDiff(tpl.Triggers(), diff.FetchManagedTriggers())
+		fmt.Println(triggerDiff)
 	},
 }
